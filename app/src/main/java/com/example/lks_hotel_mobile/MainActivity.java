@@ -49,7 +49,10 @@ public class MainActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(username.getText().length() < 0 || password.getText().length() < 0){
+                Intent main = new Intent(MainActivity.this, FDCheckOut.class);
+                startActivity(main);
+                finish();
+                /*if(username.getText().length() < 0 || password.getText().length() < 0){
                     Toast.makeText(getApplicationContext(), "Username And Password Must Be Filled", Toast.LENGTH_LONG).show();
                 }else{
                     StringRequest request = new StringRequest(Request.Method.POST, RequestApi.getLoginUrl(), new Response.Listener<String>() {
@@ -97,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     };
                     queue.add(request);
-                }
+                }*/
             }
         });
     }

@@ -16,6 +16,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class FDCheckOut extends AppCompatActivity {
     Spinner room, item;
     Context ctx;
@@ -25,12 +27,6 @@ public class FDCheckOut extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fdcheck_out);
-
-        room = findViewById(R.id.room);
-        item = findViewById(R.id.item);
-        ctx = this;
-        queue = Volley.newRequestQueue(ctx);
-        s = new Session(ctx);
     }
     void getRoom(){
 //        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, RequestApi.getRoomUrl(), null, new Response.Listener<JSONArray>() {
