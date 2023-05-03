@@ -49,16 +49,13 @@ public class MainActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent main = new Intent(MainActivity.this, FDCheckOut.class);
-                startActivity(main);
-                finish();
                 if(username.getText().length() < 0 || password.getText().length() < 0){
                     Toast.makeText(getApplicationContext(), "Username And Password Must Be Filled", Toast.LENGTH_LONG).show();
                 }else{
                     StringRequest request = new StringRequest(Request.Method.POST, RequestApi.getLoginUrl(), new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            if (response != null) {
+                            if(response != null){
                                 try {
                                     JSONObject obj = new JSONObject(response);
                                     s.SetEmployee(obj.getInt("id"), obj.getString("username"), obj.getString("name"));
@@ -68,8 +65,17 @@ public class MainActivity extends AppCompatActivity {
                                 } catch (JSONException ex) {
                                     ex.printStackTrace();
                                 }
-                            } else {
-                                Toast.makeText(getApplicationContext(), "User Not Found", Toast.LENGTH_LONG).show();
+                            }else{
+                                AlertDialog dialog = new AlertDialog.Builder(ctx).create();
+                                dialog.setTitle("Error");
+                                dialog.setMessage("Can't find user");
+                                dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Ok", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                dialog.show();
                             }
                         }
                     }, new Response.ErrorListener() {

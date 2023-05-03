@@ -42,13 +42,14 @@
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:background="@drawable/spinner_custom"
-        android:popupBackground="@color/yellow"
+        android:popupBackground="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.17"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView1"
-        app:layout_constraintVertical_bias="0.018" />
+        app:layout_constraintVertical_bias="0.018"
+        />
 
     <TextView
         android:id="@+id/textView2"
@@ -120,7 +121,7 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:background="@drawable/spinner_custom"
-        android:popupBackground="@color/yellow"
+        android:popupBackground="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.495"
@@ -156,7 +157,8 @@
         app:layout_constraintHorizontal_bias="0.477"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4"
-        app:layout_constraintVertical_bias="0.025" />
+        app:layout_constraintVertical_bias="0.025"
+        android:editable="false"/>
 
     <TextView
         android:id="@+id/textView5"
@@ -181,6 +183,7 @@
         android:padding="10dp"
         android:textColor="@color/white"
         android:textSize="18sp"
+        android:inputType="number"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.203"
@@ -216,9 +219,11 @@
         app:layout_constraintHorizontal_bias="0.486"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        android:editable="false"/>
 
     <Button
+        android:id="@+id/btnSub"
         android:layout_width="100dp"
         android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="parent"

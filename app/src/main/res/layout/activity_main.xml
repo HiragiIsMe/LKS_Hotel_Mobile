@@ -35,7 +35,9 @@
         android:textColor="@color/white"
         android:hint="Username"
         android:textColorHint="@color/white"
-        android:paddingStart="15dp"/>
+        android:paddingStart="15dp"
+        android:nextFocusDown="@id/password"
+        android:inputType="text"/>
 
     <EditText
         android:id="@+id/password"
@@ -53,7 +55,8 @@
         android:textColor="@color/white"
         android:textColorHint="@color/white"
         android:paddingStart="15dp"
-        android:inputType="textPassword"/>
+        android:inputType="textPassword"
+        android:nextFocusDown="@id/login"/>
 
     <Button
         android:id="@+id/login"

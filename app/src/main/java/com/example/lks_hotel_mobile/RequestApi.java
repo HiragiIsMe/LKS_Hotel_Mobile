@@ -14,7 +14,7 @@ public class RequestApi {
         return getBaseUrl() + login;
     }
     public static String getCheckoutUrl(){
-        return getBaseUrl() + fd;
+        return getBaseUrl() + fdcheckout;
     }
     public static String getRoomUrl(){
         return getBaseUrl() + room;
