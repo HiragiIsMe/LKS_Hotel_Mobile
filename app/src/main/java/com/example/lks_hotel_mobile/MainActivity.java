@@ -1,5 +1,7 @@
 package com.example.lks_hotel_mobile;
 
+import static com.android.volley.VolleyLog.TAG;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -8,6 +10,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,13 +52,13 @@ public class MainActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(username.getText().length() < 0 || password.getText().length() < 0){
+                if(username.getText().length() == 0 || password.getText().length() == 0){
                     Toast.makeText(getApplicationContext(), "Username And Password Must Be Filled", Toast.LENGTH_LONG).show();
                 }else{
                     StringRequest request = new StringRequest(Request.Method.POST, RequestApi.getLoginUrl(), new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            if(response != null){
+                            if(response != null) {
                                 try {
                                     JSONObject obj = new JSONObject(response);
                                     s.SetEmployee(obj.getInt("id"), obj.getString("username"), obj.getString("name"));
@@ -64,18 +67,17 @@ public class MainActivity extends AppCompatActivity {
                                     finish();
                                 } catch (JSONException ex) {
                                     ex.printStackTrace();
+                                    AlertDialog dialog = new AlertDialog.Builder(ctx).create();
+                                    dialog.setTitle("Error");
+                                    dialog.setMessage("Can't find user");
+                                    dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    dialog.show();
                                 }
-                            }else{
-                                AlertDialog dialog = new AlertDialog.Builder(ctx).create();
-                                dialog.setTitle("Error");
-                                dialog.setMessage("Can't find user");
-                                dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Ok", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                                dialog.show();
                             }
                         }
                     }, new Response.ErrorListener() {

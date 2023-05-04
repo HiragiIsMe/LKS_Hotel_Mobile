@@ -1,5 +1,6 @@
 package com.example.lks_hotel_mobile;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -9,20 +10,25 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -31,11 +37,13 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class FDCheckOut extends AppCompatActivity {
     EditText price, qty, sub;
     Spinner room, item;
     Button Submit;
+    RadioButton food,drink;
     Context ctx;
     RequestQueue queue;
     Session s;
@@ -46,7 +54,7 @@ public class FDCheckOut extends AppCompatActivity {
     List<Integer> fdPrice;
     int RoomID, FDID,  FDQty, FDSub, EmployeeID;
     int quantity, pricee;
-    @SuppressLint("MissingInflatedId")
+    @SuppressLint({"MissingInflatedId", "WrongViewCast"})
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +65,8 @@ public class FDCheckOut extends AppCompatActivity {
         room = findViewById(R.id.roomNumber);
         item = findViewById(R.id.item);
         Submit = findViewById(R.id.btnSub);
+        food = findViewById(R.id.food);
+        drink = findViewById(R.id.drink);
         ctx = this;
         queue = Volley.newRequestQueue(ctx);
         s = new Session(ctx);
@@ -118,22 +128,66 @@ public class FDCheckOut extends AppCompatActivity {
         Submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try{
-                    FDQty = Integer.parseInt(qty.getText().toString());
-                    FDSub = Integer.parseInt(sub.getText().toString());
-                    JSONObject obj = new JSONObject();
-                    obj.put("RoomID", RoomID);
-                    obj.put("FDID", FDID);
-                    obj.put("Qty", FDQty);
-                    obj.put("TotalPrice", FDSub);
-                    obj.put("EmployeeID", s.getId());
-                    JsonObjectRequest push = new JsonObjectRequest(Request.Method.POST, RequestApi.getCheckoutUrl(), obj, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            if(Boolean.valueOf(String.valueOf(response)) ==  true){
-                                AlertDialog dialog = new AlertDialog.Builder(ctx).create();
-                                dialog.setTitle("Success");
-                                dialog.setMessage("Checkout Success");
+                if(!(food.isChecked() || drink.isChecked()) || price.getText().length() == 0 || qty.getText().length() == 0 || sub.getText().toString() == "0"){
+                    Toast.makeText(ctx, "All Field Must Be Filled", Toast.LENGTH_LONG).show();
+                }else{
+                    try {
+                        JSONObject obj = new JSONObject();
+                        obj.put("RoomID", RoomID);
+                        obj.put("FDID", FDID);
+                        obj.put("Qty", FDQty);
+                        obj.put("TotalPrice", FDSub);
+                        obj.put("EmployeeID", s.getId());
+
+                    }catch (JSONException ex){
+                        ex.printStackTrace();
+                    }
+                    try{
+                        FDQty = Integer.parseInt(qty.getText().toString());
+                        FDSub = Integer.parseInt(sub.getText().toString());
+                        JSONObject obj = new JSONObject();
+                        obj.put("RoomID", RoomID);
+                        obj.put("FDID", FDID);
+                        obj.put("Qty", FDQty);
+                        obj.put("TotalPrice", FDSub);
+                        obj.put("EmployeeID", s.getId());
+                        JsonObjectRequest push = new JsonObjectRequest(Request.Method.POST, RequestApi.getCheckoutUrl(), obj, new Response.Listener<JSONObject>() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    if(response.getInt("Status") == 1){
+                                        AlertDialog dialog = new AlertDialog.Builder(ctx).create();
+                                        dialog.setTitle("Success");
+                                        dialog.setMessage("Checkout Success");
+                                        dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Ok", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                dialog.dismiss();
+                                            }
+                                        });
+                                        dialog.show();
+
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                    AlertDialog dialog = new AlertDialog.Builder(ctx).create();
+                                    dialog.setTitle("Failed");
+                                    dialog.setMessage("Checkout Failed");
+                                    dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                                    dialog.show();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(ctx).create();
+                                dialog.setTitle("Error");
+                                dialog.setMessage(""+error);
                                 dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Ok", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -142,25 +196,11 @@ public class FDCheckOut extends AppCompatActivity {
                                 });
                                 dialog.show();
                             }
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            androidx.appcompat.app.AlertDialog dialog = new androidx.appcompat.app.AlertDialog.Builder(ctx).create();
-                            dialog.setTitle("Error");
-                            dialog.setMessage(""+error);
-                            dialog.setButton(DialogInterface.BUTTON_NEUTRAL, "Ok", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialog.dismiss();
-                                }
-                            });
-                            dialog.show();
-                        }
-                    });
-                    queue.add(push);
-                }catch (JSONException ex){
-                    ex.printStackTrace();
+                        });
+                        queue.add(push);
+                    }catch (JSONException ex){
+                        ex.printStackTrace();
+                    }
                 }
             }
         });
