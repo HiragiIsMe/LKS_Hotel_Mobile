@@ -167,6 +167,10 @@ public class FDCheckOut extends AppCompatActivity {
                                         });
                                         dialog.show();
 
+                                        food.setChecked(false);
+                                        drink.setChecked(false);
+                                        qty.getText().clear();
+                                        sub.getText().clear();
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
